@@ -4,23 +4,18 @@ import { ITasks } from "../../models/ITasks";
 interface TaskState {
     todoTasks: ITasks[],
     compledTasks: ITasks[],
+    isTodoLoad: boolean,
+    isCompledLoad: boolean,
+    isLoading: boolean,
 }
 
 
 const initialState: TaskState = {
-    compledTasks: [
-        {
-            id: 2,
-            text: 'ssAAA'
-        }
-    ],
-    todoTasks: [        
-        {
-            id: 1,
-            text: 'AAA'
-        }
-    ]
-
+    compledTasks: [],
+    todoTasks: [],
+    isCompledLoad: false,
+    isLoading: false,
+    isTodoLoad: false
 }
 
 const taskReducer = createSlice({
@@ -31,6 +26,10 @@ const taskReducer = createSlice({
             state.todoTasks.push(action.payload)
         },
 
+        setTodoList(state, action: PayloadAction<ITasks[]>) {
+            state.todoTasks = action.payload
+        },
+
         removeTodoList(state, action: PayloadAction<number>) {
             state.todoTasks = state.todoTasks.filter(task => task.id !== action.payload);
         },
@@ -39,12 +38,24 @@ const taskReducer = createSlice({
             state.compledTasks.push(action.payload)
         },
 
+        setCompledList(state, action: PayloadAction<ITasks[]>) {
+            state.compledTasks = action.payload
+        },
+
         removeCompledList(state, action: PayloadAction<number>) {
             state.compledTasks = state.compledTasks.filter(task => task.id !== action.payload);
         },
+
+        todoLoading(state) {
+            state.isTodoLoad = true;
+        },
+
+        todoSuccess(state) {
+            state.isTodoLoad = false;
+        }
     }
 });
 
-export const {addCompledList, addTodoList, removeCompledList, removeTodoList} = taskReducer.actions
+export const {addCompledList, addTodoList, removeCompledList, removeTodoList, setCompledList, setTodoList, todoLoading, todoSuccess} = taskReducer.actions
 
 export default taskReducer.reducer;

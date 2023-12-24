@@ -1,33 +1,66 @@
+import { LocalName, mediator } from "../../service/TaskMediator";
 import { AppDispatch } from "../store"
-import { addCompledList, addTodoList, removeCompledList, removeTodoList } from "./taskReducer"
+import { 
+    addCompledList, 
+    addTodoList, 
+    removeCompledList, 
+    removeTodoList, 
+    setCompledList, 
+    setTodoList, 
+    todoLoading,
+    todoSuccess
+} from "./taskReducer"
 
-const createTask = (text: string) => (dispatch: AppDispatch) => {
-    dispatch(addTodoList({text, id: Date.now()}))
+const fetchTasks = () => async (dispatch: AppDispatch) => {
+    const [todo, compled] = await mediator.fetchTasks();
+    dispatch(setTodoList(todo))
+    dispatch(setCompledList(compled))
 }
 
-const deleteTask = (id: number, check: boolean) => (dispatch: AppDispatch) => {
+const createTask = (text: string) => async (dispatch: AppDispatch) => {
+    dispatch(todoLoading());
+    const task = {text, id: Date.now()}
+    dispatch(addTodoList(task));
+    await mediator.saveTask(task, LocalName.TODO)
+    dispatch(todoSuccess())
+}
+
+const deleteTask = (id: number, check: boolean) => async (dispatch: AppDispatch) => {
+    dispatch(todoLoading());
     if(check) {
         dispatch(removeCompledList(id))
+        await mediator.deleteTask(id, LocalName.COMPLED)
     } else {
         dispatch(removeTodoList(id))
+        await mediator.deleteTask(id, LocalName.TODO)
     }
-
+    dispatch(todoSuccess())
 }
 
-const moveTask = (id: number, text: string, check: boolean) => (dispatch: AppDispatch) => {
+const moveTask = (id: number, text: string, check: boolean) => async (dispatch: AppDispatch) => {
+    const task = {text, id}
+    dispatch(todoLoading());
+
     if(!check) {
-        dispatch(addCompledList({text, id}));
+        dispatch(addCompledList(task));
         dispatch(removeTodoList(id));
+        await mediator.saveTask(task, LocalName.COMPLED)
+        await mediator.deleteTask(id, LocalName.TODO)
     } else {
-        dispatch(addTodoList({text, id}));
+
+        dispatch(addTodoList(task));
         dispatch(removeCompledList(id));
+        await mediator.saveTask(task, LocalName.TODO)
+        await mediator.deleteTask(id, LocalName.COMPLED)
     }
 
+    dispatch(todoSuccess())
 }
 
 
 export const actions = {
     createTask,
     deleteTask,
-    moveTask
+    moveTask,
+    fetchTasks
 }
