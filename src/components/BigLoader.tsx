@@ -2,7 +2,9 @@
 
 const BigLoader = () => {
     return(
-        <span className="loader_bg" ></span>
+        <div className="loader_inner">
+            <span className="loader_bg" ></span>
+        </div>
     )
 }
 

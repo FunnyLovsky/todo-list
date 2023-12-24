@@ -8,13 +8,15 @@ import {
     setCompledList, 
     setTodoList, 
     todoLoading,
-    todoSuccess
+    todoSuccess,
+    fetchSuccess
 } from "./taskReducer"
 
 const fetchTasks = () => async (dispatch: AppDispatch) => {
     const [todo, compled] = await mediator.fetchTasks();
     dispatch(setTodoList(todo))
     dispatch(setCompledList(compled))
+    dispatch(fetchSuccess())
 }
 
 const createTask = (text: string) => async (dispatch: AppDispatch) => {

@@ -14,7 +14,7 @@ const initialState: TaskState = {
     compledTasks: [],
     todoTasks: [],
     isCompledLoad: false,
-    isLoading: false,
+    isLoading: true,
     isTodoLoad: false
 }
 
@@ -52,10 +52,24 @@ const taskReducer = createSlice({
 
         todoSuccess(state) {
             state.isTodoLoad = false;
+        },
+
+        fetchSuccess(state) {
+            state.isLoading = false;
         }
     }
 });
 
-export const {addCompledList, addTodoList, removeCompledList, removeTodoList, setCompledList, setTodoList, todoLoading, todoSuccess} = taskReducer.actions
+export const {
+    addCompledList, 
+    addTodoList, 
+    removeCompledList, 
+    removeTodoList, 
+    setCompledList, 
+    setTodoList, 
+    todoLoading, 
+    todoSuccess,
+    fetchSuccess
+} = taskReducer.actions
 
 export default taskReducer.reducer;

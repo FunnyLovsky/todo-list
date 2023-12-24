@@ -27,7 +27,7 @@ class TaskMediator {
             const todo: ITasks[] = JSON.parse(todoTasks)
             const compled: ITasks[] = JSON.parse(completedTasks)
 
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             return [todo, compled]
         } catch (error) {
             console.error('Ошибка получения данных из localStorage:', error);
