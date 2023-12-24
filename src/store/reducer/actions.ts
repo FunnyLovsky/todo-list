@@ -7,9 +7,10 @@ import {
     removeTodoList, 
     setCompledList, 
     setTodoList, 
-    todoLoading,
-    todoSuccess,
-    fetchSuccess
+    taskLoading,
+    taskSuccess,
+    fetchSuccess,
+    setCurrentTask
 } from "./taskReducer"
 
 const fetchTasks = () => async (dispatch: AppDispatch) => {
@@ -20,15 +21,19 @@ const fetchTasks = () => async (dispatch: AppDispatch) => {
 }
 
 const createTask = (text: string) => async (dispatch: AppDispatch) => {
-    dispatch(todoLoading());
+    dispatch(taskLoading());
+
     const task = {text, id: Date.now()}
+
+    dispatch(setCurrentTask(task.id))
     dispatch(addTodoList(task));
+
     await mediator.saveTask(task, LocalName.TODO)
-    dispatch(todoSuccess())
+    dispatch(taskSuccess())
 }
 
 const deleteTask = (id: number, check: boolean) => async (dispatch: AppDispatch) => {
-    dispatch(todoLoading());
+    dispatch(taskLoading());
     if(check) {
         dispatch(removeCompledList(id))
         await mediator.deleteTask(id, LocalName.COMPLED)
@@ -36,27 +41,28 @@ const deleteTask = (id: number, check: boolean) => async (dispatch: AppDispatch)
         dispatch(removeTodoList(id))
         await mediator.deleteTask(id, LocalName.TODO)
     }
-    dispatch(todoSuccess())
+    dispatch(taskSuccess())
 }
 
 const moveTask = (id: number, text: string, check: boolean) => async (dispatch: AppDispatch) => {
     const task = {text, id}
-    dispatch(todoLoading());
+    dispatch(taskLoading());
 
     if(!check) {
+        dispatch(setCurrentTask(id))
         dispatch(addCompledList(task));
         dispatch(removeTodoList(id));
         await mediator.saveTask(task, LocalName.COMPLED)
         await mediator.deleteTask(id, LocalName.TODO)
     } else {
-
+        dispatch(setCurrentTask(id))
         dispatch(addTodoList(task));
         dispatch(removeCompledList(id));
         await mediator.saveTask(task, LocalName.TODO)
         await mediator.deleteTask(id, LocalName.COMPLED)
     }
 
-    dispatch(todoSuccess())
+    dispatch(taskSuccess())
 }
 
 

@@ -1,9 +1,13 @@
-import { useAppSelector } from "../store/hooks";
+import { FC } from "react";
 
-const SmallLoader = () => {
-    const {isTodoLoad} = useAppSelector(state => state.taskReducer)
+
+interface LoaderProps {
+    show: boolean
+}
+
+const SmallLoader: FC<LoaderProps> = ({show}) => {
     return(
-        <span className="loader" style={{opacity: isTodoLoad ? 1 : 0}}></span>
+        <span className="loader" style={{opacity: show ? 1 : 0}}></span>
     )
 }
 

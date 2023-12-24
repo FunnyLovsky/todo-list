@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
-import { useActions } from "../store/hooks";
+import { useActions, useAppSelector } from "../store/hooks";
+import SmallLoader from "./SmallLoader";
 
 interface TaskProps {
     text: string,
@@ -13,6 +14,7 @@ const Task: FC<TaskProps> = ({text, check = false, id}) => {
     const [checked, setChecked] = useState<boolean>(check)
     const [label, setLabel] = useState<string>(text);
     const {deleteTask, moveTask} = useActions()
+    const {currentTaskId} = useAppSelector(state => state.taskReducer)
 
     const editHandler = () => {
         if(edit) {
@@ -35,11 +37,13 @@ const Task: FC<TaskProps> = ({text, check = false, id}) => {
 
     return(
         <li className={edit ? 'editMode' : ''}>
+
             <input type="checkbox" checked={checked} onChange={checkHandler}/>
             <label>{label}</label>
             <input type="text" value={value} onChange={(e) => setValue(e.target.value)}/>
             <button className="edit" onClick={editHandler}>Edit</button>
             <button className="delete" onClick={deleteHandler}>Delete</button>
+            <SmallLoader show={currentTaskId === id}/>
         </li>
     )
 }

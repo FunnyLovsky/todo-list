@@ -6,10 +6,12 @@ body {
 }
 .container {
   display: block;
-  width: 400px;
+  max-width: 400px;
+  width: 100%;
   margin: 100px auto 0;
 }
 ul {
+  position: relative;
   margin: 0;
   padding: 0;
 }
@@ -71,6 +73,7 @@ label[for='new-task'] {
 input#new-task {
   float: left;
   width: 318px;
+
 }
 p > button:hover {
   color: #0FC57C;
@@ -78,6 +81,7 @@ p > button:hover {
 
 /* Task list */
 li {
+  position: relative;
   overflow: hidden;
   padding: 20px 0;
   border-bottom: 1px solid #eee;
@@ -126,15 +130,12 @@ h4 {
 }
 
 .loader {
-  position: absolute;
-  top: 4px;
-  right: -5px;
+
   width: 18px;
   height: 18px;
   border: 3px dotted #000;
   border-radius: 50%;
   display: inline-block;
-  position: relative;
   box-sizing: border-box;
   transition: .3s;
   animation: rotation 2s linear infinite;

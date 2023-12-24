@@ -1,7 +1,5 @@
 import { useAppSelector } from "../store/hooks";
-
 import NotFound from "./NotFound";
-import SmallLoader from "./SmallLoader";
 import Task from "./Task";
 
 const TodoList = () => {
@@ -9,10 +7,7 @@ const TodoList = () => {
 
     return(
         <>
-            <h3>
-                Todo 
-                <SmallLoader/>
-            </h3>
+            <h3>Todo</h3>
 
             <ul id="incomplete-tasks">
 

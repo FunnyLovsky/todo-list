@@ -4,18 +4,18 @@ import { ITasks } from "../../models/ITasks";
 interface TaskState {
     todoTasks: ITasks[],
     compledTasks: ITasks[],
-    isTodoLoad: boolean,
-    isCompledLoad: boolean,
+    isTaskLoad: boolean,
     isLoading: boolean,
+    currentTaskId: number
 }
 
 
 const initialState: TaskState = {
     compledTasks: [],
     todoTasks: [],
-    isCompledLoad: false,
     isLoading: true,
-    isTodoLoad: false
+    isTaskLoad: false,
+    currentTaskId: 0
 }
 
 const taskReducer = createSlice({
@@ -46,17 +46,27 @@ const taskReducer = createSlice({
             state.compledTasks = state.compledTasks.filter(task => task.id !== action.payload);
         },
 
-        todoLoading(state) {
-            state.isTodoLoad = true;
+        taskLoading(state) {
+            state.isTaskLoad = true;
         },
 
-        todoSuccess(state) {
-            state.isTodoLoad = false;
+        taskSuccess(state) {
+            state.isTaskLoad = false;
+            state.currentTaskId = 0;
         },
 
         fetchSuccess(state) {
             state.isLoading = false;
-        }
+
+        },
+        setCurrentTask(state, action: PayloadAction<number>) {
+            state.currentTaskId = action.payload;
+        },
+        editTodoTask(state, action: PayloadAction<ITasks>) {
+            state.todoTasks = state.todoTasks.map(task =>
+                task.id === action.payload.id ? { ...task, text: action.payload.text } : task
+            );
+        }        
     }
 });
 
@@ -67,9 +77,10 @@ export const {
     removeTodoList, 
     setCompledList, 
     setTodoList, 
-    todoLoading, 
-    todoSuccess,
-    fetchSuccess
+    taskLoading, 
+    taskSuccess,
+    fetchSuccess,
+    setCurrentTask
 } = taskReducer.actions
 
 export default taskReducer.reducer;
